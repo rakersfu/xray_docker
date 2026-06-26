@@ -5,7 +5,7 @@ FROM alpine:3.20
 WORKDIR /app
 
 # ① 版本号，可自行修改为想要的 Xray 版本
-ARG XRAY_VERSION=1.8.2
+ARG XRAY_VERSION=26.3.27
 
 # ② 创建无密码用户、安装必要工具、下载 Xray、解压
 RUN addgroup -g 1000 -S appgroup && \
@@ -26,7 +26,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh && \
 USER appuser
 
 # ⑤ 暴露端口（按需修改）
-EXPOSE 8080
+EXPOSE 443
 
 # ⑥ 入口 + 默认命令
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
