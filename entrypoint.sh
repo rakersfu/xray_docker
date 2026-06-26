@@ -5,7 +5,7 @@ set -e
 # 1. 环境变量 & 默认值（可在 docker run 时覆盖）
 # ----------------------------------------------------
 UUID=${UUID:-588db1b3-0b3f-48d9-98a2-c5574415a400}
-PORT=${PORT:-8080}
+PORT=${PORT:-443}
 WS_PATH=${WS_PATH:-/chat}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
 LOG_LEVEL=${LOG_LEVEL:-info}          # debug | info | warning | error
