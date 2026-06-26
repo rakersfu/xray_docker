@@ -1,0 +1,33 @@
+# ---------- Dockerfile (Xray Core) ----------
+FROM alpine:3.20
+
+# 工作目录
+WORKDIR /app
+
+# ① 版本号，可自行修改为想要的 Xray 版本
+ARG XRAY_VERSION=1.8.2
+
+# ② 创建无密码用户、安装必要工具、下载 Xray、解压
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup && \
+    apk add --no-cache wget unzip ca-certificates && \
+    wget -q https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
+    unzip Xray-linux-64.zip && \
+    mv Xray ./xray && \
+    rm -f Xray-linux-64.zip && \
+    rm -rf /var/cache/apk/*
+
+# ③ 复制入口脚本
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    chown -R appuser:appgroup /app
+
+# ④ 设置用户
+USER appuser
+
+# ⑤ 暴露端口（按需修改）
+EXPOSE 8080
+
+# ⑥ 入口 + 默认命令
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["./xray", "run", "-config", "config.json"]
