@@ -1,0 +1,59 @@
+{
+  "inbounds": [
+    {
+      "port": 2779,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "0c7b548e-fc9e-47d7-b307-453ee54201b0",
+            "email": "user@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/vless-ws",
+          "headers": {
+            "Host": "lep.840505.xyz"
+          }
+        }
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "6a08c103-e68d-4439-938f-56f0e8d987cf",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "www.mysql.com:443",
+          "serverNames": [ "www.mysql.com" ],
+          "privateKey": "8DJPb44ktCXws1IhQ3J4Q19GRPj0-mN6ruhxia2_8VM",
+          "shortIds": [ "b477209778" ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    { "protocol": "freedom" }
+  ],
+  "log": {
+    "loglevel": "info",
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log"
+  }
+}
