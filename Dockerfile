@@ -13,7 +13,8 @@ RUN addgroup -g 1000 -S appgroup && \
     apk add --no-cache wget unzip ca-certificates && \
     wget -q https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
     unzip Xray-linux-64.zip && \
-    mv Xray ./xray && \
+    mv xray /app/xray && \
+    mv geo* /app/ && \
     rm -f Xray-linux-64.zip && \
     rm -rf /var/cache/apk/*
 
