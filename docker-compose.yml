@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   xray:
-    image: xiongli870110/xray:1.0.0
+    image: xiongli870110/xray:1.0.1
     container_name: xray
     restart: unless-stopped
     ports:
