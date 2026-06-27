@@ -11,13 +11,13 @@ services:
     environment:
       # 可覆盖的环境变量（入口脚本会用到）
       UUID: ""                       # 如果留空，入口脚本会调用 ./xray uuid 自动生成
-      PORT: 443
-      WSPORT: 2779
-      DESTHOST: 443
-      SHORTIDS: b477209778
+      PORT: 443                      # 本机监听端口，用于Reality
+      WSPORT: 2779                   # 本机监听端口，用于WebSocket
+      DESTHOST: 443                  # 伪装网站的端口，跟下面的DOMAIN所用网址要对应
+      SHORTIDS: b477209778           # 按自己需要更改，0~9，a~f组合，双数，最多16个字符
       HOST: teng.raker.eu.org        # 改成你自己的主机ip或配置证书的域名
-      WS_PATH: /vless-ws
-      LOG_LEVEL: info
+      WS_PATH: /vless-ws             # 根据需要更改
+      LOG_LEVEL: info                # 一般不用改
       DOMAIN: www.mysql.com          # 最好改成你服务器所在地区最近的网站，还需要满足Reality使用协议
       #CERT_FILE: /etc/ssl/cert.pem
       #KEY_FILE: /etc/ssl/key.pem
