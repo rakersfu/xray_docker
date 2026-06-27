@@ -21,12 +21,12 @@ if [ -z "${UUID}" ]; then
   echo "[Info] Generated random UUID: $UUID"
 fi
 PORT=${PORT:-443}
-WSPORT=${WSPORT:-2779}
+XHTTPPORT=${XHTTPPORT:-2779}
 DESTHOST=${DESTHOST:-443}
 SERVERNAMES=${SERVERNAMES:-www.mysql.com}
 SHORTIDS=${SHORTIDS:-b477209778}
 HOST=${HOST:-lep.840505.xyz}
-XHTTP_PATH=${XHTTP_PATH:-/vless-ws}
+XHTTP_PATH=${XHTTP_PATH:-/vless-xhttp}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
 LOG_LEVEL=${LOG_LEVEL:-info}
 
@@ -48,7 +48,7 @@ cat > "$CONFIG_FILE" <<EOF
 {
   "inbounds": [
     {
-      "port": "$WSPORT",
+      "port": "$XHTTPPORT",
       "protocol": "vless",
       "settings": {
         "clients": [
@@ -117,11 +117,11 @@ echo "[Init] Config generated successfully. Starting Xray..."
 # ----------------------------------------------------
 # 5. 生成 vless:// 链接并打印
 # ----------------------------------------------------
-WS_LINK="vless://${UUID}@${HOST}:${WSPORT}?type=ws&security=none&path=${WS_PATH}&host=${HOST}#VLESS-WS"
+XHTTP_LINK="vless://${UUID}@${HOST}:${XHTTPPORT}?type=xhttp&security=none&path=${XHTTP_PATH}&host=${HOST}#VLESS-XHTTP"
 REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
 
 echo "[Link] WebSocket VLESS:"
-echo "$WS_LINK"
+echo "$XHTTP_LINK"
 echo "[Link] Reality VLESS:"
 echo "$REALITY_LINK"
 
