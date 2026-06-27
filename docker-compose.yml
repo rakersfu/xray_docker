@@ -14,12 +14,11 @@ services:
       PORT: 443
       WSPORT: 2779
       DESTHOST: 443
-      SERVERNAMES: www.mysql.com
       SHORTIDS: b477209778
-      HOST: teng.raker.eu.org
+      HOST: teng.raker.eu.org        # 改成你自己的主机ip或配置证书的域名
       WS_PATH: /vless-ws
       LOG_LEVEL: info
-      DOMAIN: www.mysql.com
+      DOMAIN: www.mysql.com          # 最好改成你服务器所在地区最近的网站，还需要满足Reality协议使用
       #CERT_FILE: /etc/ssl/cert.pem
       #KEY_FILE: /etc/ssl/key.pem
       #LISTEN_ADDR: 0.0.0.0
