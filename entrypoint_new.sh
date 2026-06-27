@@ -63,8 +63,8 @@ cat > "$CONFIG_FILE" <<EOF
         "network": "xhttp",
         "security": "none",
         "xhttpSettings": {
-          "path": "/vless-ws",
-          "host": "teng.raker.eu.org"
+          "path": "$XHTTP_PATH",
+          "host": "$HOST"
         }
       }
     },
