@@ -6,16 +6,16 @@ services:
     container_name: xray
     restart: unless-stopped
     ports:
-      - "443:443"       # TLS/Reality 端口
-      - "2779:2779"      # WebSocket 端口
+      - "443:443"       # TLS/Reality 端口，确保不要与主机的端口冲突
+      - "2779:2779"     # XHTTP 端口，确保不要与主机的端口冲突
     environment:
       # 可覆盖的环境变量（入口脚本会用到）
       UUID: ""                       # 如果留空，入口脚本会调用 ./xray uuid 自动生成
       PORT: 443                      # 本机监听端口，用于Reality
-      XHTTPPORT: 2779                # 本机监听端口，用于WebSocket
+      XHTTPPORT: 2779                # 本机监听端口，用于XHTTP
       DESTHOST: 443                  # 伪装网站的端口，跟下面的DOMAIN所用网址要对应
       SHORTIDS: b477209778           # 按自己需要更改，0~9，a~f组合，双数，最多16个字符
-      HOST: teng.raker.eu.org        # 改成你自己的主机ip或配置证书的域名
+      HOST: xxx.xxx.xxx              # 改成你自己的主机ip或配置证书的域名
       XHTTP_PATH: /vless-xhttp       # 根据需要更改
       LOG_LEVEL: info                # 一般不用改
       DOMAIN: www.mysql.com          # 最好改成你服务器所在地区最近的网站，还需要满足Reality使用协议
