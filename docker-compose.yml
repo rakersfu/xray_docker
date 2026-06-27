@@ -22,8 +22,8 @@ services:
       #CERT_FILE: /etc/ssl/cert.pem
       #KEY_FILE: /etc/ssl/key.pem
       #LISTEN_ADDR: 0.0.0.0
-    #volumes:
+    volumes:
       #- ./certs/cert.pem:/etc/ssl/cert.pem:ro
       #- ./certs/key.pem:/etc/ssl/key.pem:ro
-      #- ./logs:/var/log/xray
+      - ./logs:/var/log/xray
     #command: ["./xray", "run", "-config", "config.json"]
