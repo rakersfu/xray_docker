@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  xray:
+    image: xiongli870110/xray:1.0.0
+    container_name: xray
+    restart: unless-stopped
+    ports:
+      - "8443:443"       # TLS/Reality 端口
+      - "3779:2779"      # WebSocket 端口
+    environment:
+      # 可覆盖的环境变量（入口脚本会用到）
+      UUID: ""                       # 如果留空，入口脚本会调用 ./xray uuid 自动生成
+      PORT: 443
+      WSPORT: 2779
+      DESTHOST: 443
+      SERVERNAMES: www.mysql.com
+      SHORTIDS: b477209778
+      HOST: 43.128.144.7
+      WS_PATH: /vless-ws
+      LOG_LEVEL: info
+      DOMAIN: www.mysql.com
+      #CERT_FILE: /etc/ssl/cert.pem
+      #KEY_FILE: /etc/ssl/key.pem
+      #LISTEN_ADDR: 0.0.0.0
+    #volumes:
+      #- ./certs/cert.pem:/etc/ssl/cert.pem:ro
+      #- ./certs/key.pem:/etc/ssl/key.pem:ro
+      #- ./logs:/var/log/xray
+    #command: ["./xray", "run", "-config", "config.json"]
