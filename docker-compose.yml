@@ -18,7 +18,7 @@ services:
       HOST: teng.raker.eu.org        # 改成你自己的主机ip或配置证书的域名
       WS_PATH: /vless-ws
       LOG_LEVEL: info
-      DOMAIN: www.mysql.com          # 最好改成你服务器所在地区最近的网站，还需要满足Reality协议使用
+      DOMAIN: www.mysql.com          # 最好改成你服务器所在地区最近的网站，还需要满足Reality使用协议
       #CERT_FILE: /etc/ssl/cert.pem
       #KEY_FILE: /etc/ssl/key.pem
       #LISTEN_ADDR: 0.0.0.0
