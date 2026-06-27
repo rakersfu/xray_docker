@@ -60,13 +60,11 @@ cat > "$CONFIG_FILE" <<EOF
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "ws",
+        "network": "xhttp",
         "security": "none",
-        "wsSettings": {
-          "path": "$WS_PATH",
-          "headers": {
-            "Host": "$HOST"
-          }
+        "xhttpSettings": {
+          "path": "/vless-ws",
+          "host": "teng.raker.eu.org"
         }
       }
     },
