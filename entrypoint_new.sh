@@ -15,8 +15,9 @@ echo "[Info] Password   = $PASSWORD"
 # ----------------------------------------------------
 # 2. 环境变量 & 默认值（可在 docker run 时覆盖）
 # ----------------------------------------------------
+# 如果用户传入了 UUID，就使用它；否则调用 xray uuid
 if [ -z "${UUID}" ]; then
-  UUID=$(uuidgen | tr '[:lower:]' '[:upper:]')
+  UUID=$(./xray uuid)
   echo "[Info] Generated random UUID: $UUID"
 fi
 PORT=${PORT:-443}
