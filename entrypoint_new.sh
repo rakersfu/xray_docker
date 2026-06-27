@@ -120,7 +120,7 @@ echo "[Init] Config generated successfully. Starting Xray..."
 # 5. 生成 vless:// 链接并打印
 # ----------------------------------------------------
 WS_LINK="vless://${UUID}@${HOST}:${WSPORT}?type=ws&security=none&path=${WS_PATH}&host=${HOST}#VLESS-WS"
-REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PRIVATE_KEY}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
+REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
 
 echo "[Link] WebSocket VLESS:"
 echo "$WS_LINK"
