@@ -23,7 +23,6 @@ fi
 PORT=${PORT:-443}
 XHTTPPORT=${XHTTPPORT:-2779}
 DESTHOST=${DESTHOST:-443}
-SERVERNAMES=${SERVERNAMES:-www.mysql.com}
 SHORTIDS=${SHORTIDS:-b477209778}
 HOST=${HOST:-lep.840505.xyz}
 XHTTP_PATH=${XHTTP_PATH:-/vless-xhttp}
@@ -120,7 +119,7 @@ echo "[Init] Config generated successfully. Starting Xray..."
 XHTTP_LINK="vless://${UUID}@${HOST}:${XHTTPPORT}?type=xhttp&security=none&path=${XHTTP_PATH}&host=${HOST}#VLESS-XHTTP"
 REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
 
-echo "[Link] WebSocket VLESS:"
+echo "[Link] XHTTP VLESS:"
 echo "$XHTTP_LINK"
 echo "[Link] Reality VLESS:"
 echo "$REALITY_LINK"
