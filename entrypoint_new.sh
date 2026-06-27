@@ -1,19 +1,37 @@
 #!/bin/sh
 set -e
 
+# --------------------------------------------------
+# 1. 先执行 xray x25519，提取 PrivateKey 与 Password
+# --------------------------------------------------
+echo "[Init] Generating X25519 key pair..."
+
+XRAY_OUT=$(./xray x25519)            # 只执行一次
+PRIVATE_KEY=$(echo "$XRAY_OUT" | awk -F': ' '/PrivateKey/ {print \$2}')
+PASSWORD=$(echo "$XRAY_OUT" | awk -F': ' '/Password/ {print \$2}')
+echo "[Info] PrivateKey = $PRIVATE_KEY"
+echo "[Info] Password   = $PASSWORD"
+
 # ----------------------------------------------------
-# 1. 环境变量 & 默认值（可在 docker run 时覆盖）
+# 2. 环境变量 & 默认值（可在 docker run 时覆盖）
 # ----------------------------------------------------
-UUID=${UUID:-588db1b3-0b3f-48d9-98a2-c5574415a400}
+# 如果用户传入了 UUID，就使用它；否则自动生成
+if [ -z "${UUID}" ]; then
+  UUID=$(uuidgen | tr '[:lower:]' '[:upper:]')
+  echo "[Info] Generated random UUID: $UUID"
+fi
 PORT=${PORT:-443}
+WSPORT=${WSPORT:-2779}
+DESTHOST=${DESTHOST:-443}
 SERVERNAMES=${SERVERNAMES:-www.mysql.com}
 SHORTIDS=${SHORTIDS:-b477209778}
-WS_PATH=${WS_PATH:-/chat}
+HOST=${HOST:-lep.840505.xyz}
+WS_PATH=${WS_PATH:-/vless-ws}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
 LOG_LEVEL=${LOG_LEVEL:-info}          # debug | info | warning | error
 
 # 伪装域名（TLS 服务器名 & WS 头部）
-DOMAIN=${DOMAIN:-proxy.example.com}
+DOMAIN=${DOMAIN:-www.mysql.com}
 
 # 证书路径（必须挂载到容器中）
 CERT_FILE=${CERT_FILE:-/etc/ssl/cert.pem}
@@ -30,12 +48,12 @@ cat > "$CONFIG_FILE" <<EOF
 {
   "inbounds": [
     {
-      "port": 2779,
+      "port": "$WSPORT",
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "0c7b548e-fc9e-47d7-b307-453ee54201b0",
+            "id": "$UUID",
             "email": "user@example.com"
           }
         ],
@@ -45,9 +63,9 @@ cat > "$CONFIG_FILE" <<EOF
         "network": "ws",
         "security": "none",
         "wsSettings": {
-          "path": "/vless-ws",
+          "path": "$WS_PATH",
           "headers": {
-            "Host": "lep.840505.xyz"
+            "Host": "$HOST"
           }
         }
       }
@@ -69,9 +87,9 @@ cat > "$CONFIG_FILE" <<EOF
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "www.mysql.com:443",
-          "serverNames": [ "$SERVERNAMES" ],
-          "privateKey": "8DJPb44ktCXws1IhQ3J4Q19GRPj0-mN6ruhxia2_8VM",
+          "dest": ""$DOMAIN":"$DESTHOST"",
+          "serverNames": [ "$DOMAIN" ],
+          "privateKey": "$PRIVATE_KEY",
           "shortIds": [ "$SHORTIDS" ]
         }
       }
