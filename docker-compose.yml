@@ -16,7 +16,7 @@ services:
       DESTHOST: 443
       SERVERNAMES: www.mysql.com
       SHORTIDS: b477209778
-      HOST: 43.128.144.7
+      HOST: teng.raker.eu.org
       WS_PATH: /vless-ws
       LOG_LEVEL: info
       DOMAIN: www.mysql.com
