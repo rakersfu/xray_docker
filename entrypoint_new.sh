@@ -113,13 +113,16 @@ cat > "$CONFIG_FILE" <<EOF
           "type": "field",
           "ip": ["geoip:private", "geoip:cn"],
           "outboundTag": "block"
+        },
+        {
+          "type": "field",
+          "domain": ["geosite:category-ads-all"],
+          "outboundTag": "block"
         }
       ]
     }
   "log": {
-    "loglevel": "$LOG_LEVEL",
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log"
+    "loglevel": "warning"
   }
 }
 EOF
