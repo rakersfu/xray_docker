@@ -97,30 +97,30 @@ cat > "$CONFIG_FILE" <<EOF
     }
   ],
   "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
       {
-        "tag": "direct",
-        "protocol": "freedom"
+        "type": "field",
+        "ip": ["geoip:private", "geoip:cn"],
+        "outboundTag": "block"
       },
       {
-        "tag": "block",
-        "protocol": "blackhole"
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
       }
-    ],
-    "routing": {
-      "domainStrategy": "AsIs",
-      "rules": [
-        {
-          "type": "field",
-          "ip": ["geoip:private", "geoip:cn"],
-          "outboundTag": "block"
-        },
-        {
-          "type": "field",
-          "domain": ["geosite:category-ads-all"],
-          "outboundTag": "block"
-        }
-      ]
-    },
+    ]
+  },
   "log": {
     "loglevel": "warning"
   }
