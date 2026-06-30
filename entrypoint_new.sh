@@ -36,7 +36,7 @@ DOMAIN=${DOMAIN:-www.mysql.com}
 CERT_FILE=${CERT_FILE:-/etc/ssl/cert.pem}
 KEY_FILE=${KEY_FILE:-/etc/ssl/key.pem}
 
-CONFIG_FILE="/app/config.json"
+CONFIG_FILE="$APP_HOME/config.json"
 
 echo "[Init] Generating Xray configuration..."
 
