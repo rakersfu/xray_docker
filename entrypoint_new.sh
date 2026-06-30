@@ -120,7 +120,7 @@ cat > "$CONFIG_FILE" <<EOF
           "outboundTag": "block"
         }
       ]
-    }
+    },
   "log": {
     "loglevel": "warning"
   }
