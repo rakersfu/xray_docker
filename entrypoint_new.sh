@@ -76,7 +76,7 @@ cat > "$CONFIG_FILE" <<EOF
         "clients": [
           {
             "id": "$UUID",
-            "flow": "xtls-rprx-vision"
+            "flow": "xtls-rprx-vision",
             "email": "user1@example.com"
           }
         ],
