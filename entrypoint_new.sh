@@ -68,6 +68,8 @@ cat > "$CONFIG_FILE" <<EOF
       }
     },
     {
+      "tag": "vless-reality",
+      "listen": "0.0.0.0",
       "port": "$PORT",
       "protocol": "vless",
       "settings": {
@@ -75,6 +77,7 @@ cat > "$CONFIG_FILE" <<EOF
           {
             "id": "$UUID",
             "flow": "xtls-rprx-vision"
+            "email": "user1@example.com"
           }
         ],
         "decryption": "none"
@@ -85,6 +88,7 @@ cat > "$CONFIG_FILE" <<EOF
         "realitySettings": {
           "show": false,
           "dest": "$DOMAIN:$DESTHOST",
+          "xver": 0,
           "serverNames": [ "$DOMAIN" ],
           "privateKey": "$PRIVATE_KEY",
           "shortIds": [ "$SHORTIDS" ]
@@ -93,8 +97,25 @@ cat > "$CONFIG_FILE" <<EOF
     }
   ],
   "outbounds": [
-    { "protocol": "freedom" }
-  ],
+      {
+        "tag": "direct",
+        "protocol": "freedom"
+      },
+      {
+        "tag": "block",
+        "protocol": "blackhole"
+      }
+    ],
+    "routing": {
+      "domainStrategy": "AsIs",
+      "rules": [
+        {
+          "type": "field",
+          "ip": ["geoip:private", "geoip:cn"],
+          "outboundTag": "block"
+        }
+      ]
+    }
   "log": {
     "loglevel": "$LOG_LEVEL",
     "access": "/var/log/xray/access.log",
