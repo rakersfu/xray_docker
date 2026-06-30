@@ -69,7 +69,7 @@ cat > "$CONFIG_FILE" <<EOF
     },
     {
       "tag": "vless-reality",
-      "listen": "0.0.0.0",
+      "listen": "$LISTEN_ADDR",
       "port": "$PORT",
       "protocol": "vless",
       "settings": {
