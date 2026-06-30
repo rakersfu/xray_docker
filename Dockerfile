@@ -1,8 +1,12 @@
 # ---------- Dockerfile (Xray Core) ----------
 FROM alpine:3.20
 
+ENV APP_BIN=/usr/local/bin
+ENV APP_HOME=/app
+ENV APP_LOGS=/app/logs
+
 # 工作目录
-WORKDIR /app
+WORKDIR $APP_HOME
 
 # ① 版本号，可自行修改为想要的 Xray 版本
 ARG XRAY_VERSION=26.3.27
@@ -13,16 +17,16 @@ RUN addgroup -g 1000 -S appgroup && \
     apk add --no-cache wget unzip ca-certificates && \
     wget -q https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
     unzip Xray-linux-64.zip && \
-    mv xray /app/xray && \
-    mv geo* /app/ && \
+    mv xray $APP_HOME/xray && \
+    mv geo* $APP_HOME/ && \
     rm -f Xray-linux-64.zip && \
     rm -rf /var/cache/apk/*
 
 # ③ 复制入口脚本
-#COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY entrypoint_new.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh && \
-    chown -R appuser:appgroup /app
+#COPY entrypoint.sh $APP_BIN/entrypoint.sh
+COPY entrypoint_new.sh $APP_BIN/entrypoint.sh
+RUN chmod +x $APP_BIN/entrypoint.sh && \
+    chown -R appuser:appgroup $APP_HOME
 
 # ④ 设置用户
 USER appuser
