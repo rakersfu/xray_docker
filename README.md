@@ -50,7 +50,7 @@ docker run -d \
 
 ## 使用 docker-compose
 
-包含的 `docker-compose.yml` 引用镜像 `xiongli870110/xray:1.0.2`。要使用本地构建的镜像，请修改 compose 文件的 `image` 行以引用 `xray-local:latest` 或在本地构建它。
+包含的 `docker-compose.yml` 引用镜像 `xiongli870110/xray:1.0.0`。要使用本地构建的镜像，请修改 compose 文件的 `image` 行以引用 `xray-local:1.0.0` 或在本地构建它。
 
 使用以下命令启动：
 
@@ -71,7 +71,7 @@ docker compose up -d
 - XHTTP_PATH - XHTTP 路径（默认为 UUID 的值）
 - LISTEN_ADDR - 绑定监听套接字的地址（默认值：`0.0.0.0`）
 - LOG_LEVEL - Xray 日志级别（默认值：`info`）
-- DOMAIN - 用于 Reality 中 SNI/serverNames 的虚假域名
+- DOMAIN - 用于 Reality 中 SNI/serverNames 的伪装域名
 - CERT_FILE, KEY_FILE - （为基于 TLS 的入口提供）如果使用 `entrypoint.sh`（WS+TLS），则为证书/密钥路径
 
 注意：
