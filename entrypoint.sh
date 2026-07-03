@@ -1,83 +1,134 @@
 #!/bin/sh
 set -e
 
+# --------------------------------------------------
+# 1. 先执行 xray x25519，提取 PrivateKey 与 Password
+# --------------------------------------------------
+echo "[Init] Generating X25519 key pair..."
+
+XRAY_OUT=$(./xray x25519)            # 只执行一次
+PRIVATE_KEY=$(echo "$XRAY_OUT" | awk -F': ' '/PrivateKey/ {print $2}')
+PASSWORD=$(echo "$XRAY_OUT" | awk -F': ' '/Password/ {print $2}')
+echo "[Info] PrivateKey = $PRIVATE_KEY"
+echo "[Info] Password   = $PASSWORD"
+
 # ----------------------------------------------------
-# 1. 环境变量 & 默认值（可在 docker run 时覆盖）
+# 2. 环境变量 & 默认值（可在 docker run 时覆盖）
 # ----------------------------------------------------
-UUID=${UUID:-588db1b3-0b3f-48d9-98a2-c5574415a400}
+# 如果用户传入了 UUID，就使用它；否则调用 xray uuid
+if [ -z "${UUID}" ]; then
+  UUID=$(./xray uuid)
+  echo "[Info] Generated random UUID: $UUID"
+fi
 PORT=${PORT:-443}
-WS_PATH=${WS_PATH:-/chat}
+XHTTPPORT=${XHTTPPORT:-2779}
+DESTHOST=${DESTHOST:-443}
+SHORTIDS=${SHORTIDS:-b477209778}
+HOST=${HOST:-127.0.0.1}
+XHTTP_PATH=${UUID:-}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
-LOG_LEVEL=${LOG_LEVEL:-info}          # debug | info | warning | error
+LOG_LEVEL=${LOG_LEVEL:-info}
 
-# 伪装域名（TLS 服务器名 & WS 头部）
-DOMAIN=${DOMAIN:-proxy.example.com}
+# 伪装域名
+DOMAIN=${DOMAIN:-www.mysql.com}
 
-# 证书路径（必须挂载到容器中）
+# security现在为reality，不用配置，如果为tls才需要
 CERT_FILE=${CERT_FILE:-/etc/ssl/cert.pem}
 KEY_FILE=${KEY_FILE:-/etc/ssl/key.pem}
 
-CONFIG_FILE="/app/config.json"
+CONFIG_FILE="$APP_HOME/config.json"
 
 echo "[Init] Generating Xray configuration..."
 
 # ----------------------------------------------------
-# 2. 生成 config.json
+# 3. 生成 config.json
 # ----------------------------------------------------
 cat > "$CONFIG_FILE" <<EOF
 {
-  "log": {
-    "loglevel": "$LOG_LEVEL",
-    "access": "/dev/stdout",
-    "error": "/dev/stderr"
-  },
-
   "inbounds": [
     {
-      "port": $PORT,
-      "listen": "$LISTEN_ADDR",
+      "port": "$XHTTPPORT",
       "protocol": "vless",
       "settings": {
         "clients": [
           {
             "id": "$UUID",
-            "alterId": 0,
-            "security": "auto"
+            "email": "user@example.com"
           }
-        ]
+        ],
+        "decryption": "none"
       },
       "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "$WS_PATH",
-          "headers": {
-            "Host": "$DOMAIN"
+        "network": "xhttp",
+        "security": "none",
+        "xhttpSettings": {
+          "path": "$XHTTP_PATH",
+          "host": "$HOST"
+        }
+      }
+    },
+    {
+      "tag": "vless-reality",
+      "listen": "$LISTEN_ADDR",
+      "port": "$PORT",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "$UUID",
+            "flow": "xtls-rprx-vision",
+            "email": "user1@example.com"
           }
-        },
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "$DOMAIN",
-          "certificates": [
-            {
-              "certificateFile": "$CERT_FILE",
-              "keyFile": "$KEY_FILE"
-            }
-          ]
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "$DOMAIN:$DESTHOST",
+          "xver": 0,
+          "serverNames": [ "$DOMAIN" ],
+          "privateKey": "$PRIVATE_KEY",
+          "shortIds": [ "$SHORTIDS" ]
         }
       }
     }
   ],
-
   "outbounds": [
     {
+      "tag": "direct",
       "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
     }
-  ]
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private", "geoip:cn"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      }
+    ]
+  },
+  "log": {
+    "loglevel": "warning"
+  }
 }
 EOF
 
 # ----------------------------------------------------
-# 3. 检查 config 是否生成成功
+# 4. 检查 config 是否生成成功
 # ----------------------------------------------------
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "[Error] Failed to create config file at $CONFIG_FILE"
@@ -87,7 +138,17 @@ fi
 echo "[Init] Config generated successfully. Starting Xray..."
 
 # ----------------------------------------------------
-# 4. 启动 Xray
+# 5. 生成 vless:// 链接并打印
 # ----------------------------------------------------
-# exec 把当前 shell 替换成 Xray，成为容器 PID 1
+XHTTP_LINK="vless://${UUID}@${HOST}:${XHTTPPORT}?type=xhttp&security=none&path=${XHTTP_PATH}&host=${HOST}#VLESS-XHTTP"
+REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
+
+echo "[Link] XHTTP VLESS:"
+echo "$XHTTP_LINK"
+echo "[Link] Reality VLESS:"
+echo "$REALITY_LINK"
+
+# ----------------------------------------------------
+# 6. 启动 Xray
+# ----------------------------------------------------
 exec "$@"
