@@ -32,7 +32,7 @@ RUN chmod +x $APP_BIN/entrypoint.sh && \
 USER appuser
 
 # ⑤ 暴露端口（按需修改）
-EXPOSE 443
+EXPOSE 443 2779
 
 # ⑥ 入口 + 默认命令
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
