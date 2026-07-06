@@ -20,6 +20,7 @@ if [ -z "${UUID}" ]; then
   UUID=$(./xray uuid)
   echo "[Info] Generated random UUID: $UUID"
 fi
+HOST=${HOST:-127.0.0.1}
 PORT=${PORT:-443}
 SHORTIDS=${SHORTIDS:-b477209778}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
@@ -81,7 +82,7 @@ cat > "$CONFIG_FILE" <<EOF
           "xver": 0,
           "serverNames": ["$DESTDOMAIN"],
           "privateKey": "$PRIVATE_KEY",
-          "shortIds": ["$SHORTIDS", ""]
+          "shortIds": ["$SHORTIDS"]
         }
       },
       "sniffing": {
