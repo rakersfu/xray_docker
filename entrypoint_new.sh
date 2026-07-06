@@ -81,7 +81,7 @@ cat > "$CONFIG_FILE" <<EOF
           "xver": 0,
           "serverNames": ["$DESTDOMAIN"],
           "privateKey": "$PRIVATE_KEY",
-          "shortIds": ["&SHORTIDS", ""]
+          "shortIds": ["$SHORTIDS", ""]
         }
       },
       "sniffing": {
