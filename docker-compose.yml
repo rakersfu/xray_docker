@@ -10,10 +10,10 @@ services:
     environment:
       # 可覆盖的环境变量（入口脚本会用到）
       UUID: ""                       # 如果留空，入口脚本会调用 ./xray uuid 自动生成
-      HOST: xxx.xxx.xxx              # 改成你自己的主机ip或配置证书的域名
+      HOST: xxx.xxx.xxx              # 改成你自己的主机ip或配置证书的域名，可以使用nginx，参考我的另外一个仓库
       PORT: 443                      # xray在本机的监听端口
-      PORTDOMAIN: www.amd.com        # 最好改成你服务器所在地区最近的网站，还需要满足Reality使用协议
-      DESTPORT: 443                  # 伪装网站的端口，跟下面的DOMAIN所用网址要对应
+      DESTDOMAIN: www.amd.com        # 最好改成你服务器所在地区最近的网站，还需要满足Reality使用协议
+      DESTPORT: 443                  # 伪装网站的端口，跟DESTDOMAIN所用网址要对应
       SHORTIDS: b0006687             # 按自己需要更改，0~9，a~f组合，双数，最多16个字符
       LOG_LEVEL: warning             # 一般不用改
 
