@@ -21,16 +21,13 @@ if [ -z "${UUID}" ]; then
   echo "[Info] Generated random UUID: $UUID"
 fi
 PORT=${PORT:-443}
-XHTTPPORT=${XHTTPPORT:-2779}
-DESTHOST=${DESTHOST:-443}
 SHORTIDS=${SHORTIDS:-b477209778}
-HOST=${HOST:-127.0.0.1}
-XHTTP_PATH=${UUID:-}
 LISTEN_ADDR=${LISTEN_ADDR:-0.0.0.0}
-LOG_LEVEL=${LOG_LEVEL:-info}
+LOG_LEVEL=${LOG_LEVEL:-warning}
 
-# 伪装域名
-DOMAIN=${DOMAIN:-www.mysql.com}
+# 伪装域名及端口
+DESTDOMAIN=${DOMAIN:-www.mysql.com}
+DESTPORT=${DESTHOST:-443}
 
 # security现在为reality，不用配置，如果为tls才需要
 CERT_FILE=${CERT_FILE:-/etc/ssl/cert.pem}
@@ -45,32 +42,25 @@ echo "[Init] Generating Xray configuration..."
 # ----------------------------------------------------
 cat > "$CONFIG_FILE" <<EOF
 {
-  "inbounds": [
-    {
-      "port": "$XHTTPPORT",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "$UUID",
-            "email": "user@example.com"
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "security": "none",
-        "xhttpSettings": {
-          "path": "$XHTTP_PATH",
-          "host": "$HOST"
-        }
+  "log": {
+    "loglevel": "$LOG_LEVEL"
+  },
+  "dns": {
+    "servers": [
+      "1.1.1.1",
+      "8.8.8.8",
+      {
+        "address": "223.5.5.5",
+        "port": 53,
+        "domains": ["geosite:cn"]
       }
-    },
+    ]
+  },
+  "inbounds": [
     {
       "tag": "vless-reality",
       "listen": "$LISTEN_ADDR",
-      "port": "$PORT",
+      "port": $PORT,
       "protocol": "vless",
       "settings": {
         "clients": [
@@ -87,12 +77,16 @@ cat > "$CONFIG_FILE" <<EOF
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "$DOMAIN:$DESTHOST",
+          "dest": "$DESTDOMAIN:$DESTPORT",
           "xver": 0,
-          "serverNames": [ "$DOMAIN" ],
+          "serverNames": ["$DESTDOMAIN"],
           "privateKey": "$PRIVATE_KEY",
-          "shortIds": [ "$SHORTIDS" ]
+          "shortIds": ["&SHORTIDS", ""]
         }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
       }
     }
   ],
@@ -102,27 +96,38 @@ cat > "$CONFIG_FILE" <<EOF
       "protocol": "freedom"
     },
     {
+      "tag": "proxy",
+      "protocol": "freedom"
+    },
+    {
       "tag": "block",
       "protocol": "blackhole"
     }
   ],
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
         "type": "field",
-        "ip": ["geoip:private", "geoip:cn"],
-        "outboundTag": "block"
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:cn", "geoip:private"],
+        "outboundTag": "direct"
       },
       {
         "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "ip": ["0.0.0.0/0", "::/0"],
+        "outboundTag": "proxy"
       }
     ]
-  },
-  "log": {
-    "loglevel": "warning"
   }
 }
 EOF
@@ -140,11 +145,8 @@ echo "[Init] Config generated successfully. Starting Xray..."
 # ----------------------------------------------------
 # 5. 生成 vless:// 链接并打印
 # ----------------------------------------------------
-XHTTP_LINK="vless://${UUID}@${HOST}:${XHTTPPORT}?type=xhttp&security=none&path=${XHTTP_PATH}&host=${HOST}#VLESS-XHTTP"
-REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
+REALITY_LINK="vless://${UUID}@${HOST}:${PORT}?type=tcp&security=reality&flow=xtls-rprx-vision&pbk=${PASSWORD}&sni=${DESTDOMAIN}&sid=${SHORTIDS}#VLESS-Reality"
 
-echo "[Link] XHTTP VLESS:"
-echo "$XHTTP_LINK"
 echo "[Link] Reality VLESS:"
 echo "$REALITY_LINK"
 
