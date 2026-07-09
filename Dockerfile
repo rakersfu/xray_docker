@@ -28,7 +28,7 @@ COPY appuser-crontab /etc/crontabs/appuser
 COPY supervisord.conf /etc/supervisord.conf
 RUN chmod +x $APP_BIN/*.sh && \
     mkdir -p $APP_LOGS && \
-    chown root:root /etc/crontabs/appuser && \
+    chown appuser:appgroup /etc/crontabs/appuser && \
     chmod 0644 /etc/crontabs/appuser && \
     chmod u+s /usr/bin/crontab && \
     chown -R appuser:appgroup $APP_HOME
