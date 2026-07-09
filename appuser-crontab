@@ -1,4 +1,2 @@
-# 每天凌晨清理日志
-#0 0 * * * rm -f /app/logs/*.old
-# 间隔8小时
-0 */8 * * * echo "hello from cron" >> /app/logs/cron.log
+* * * * * echo "cron test $(date)" > /app/logs/cron_test.log
+0 */8 * * * echo "hello from cron" > /app/logs/cron.log
