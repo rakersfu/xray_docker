@@ -14,7 +14,7 @@ ARG XRAY_VERSION=26.3.27
 # ② 创建无密码用户、安装必要工具、下载 Xray、解压
 RUN addgroup -g 1000 -S appgroup && \
     adduser -u 1000 -S appuser -G appgroup && \
-    apk add --no-cache wget unzip ca-certificates && \
+    apk add --no-cache wget unzip ca-certificates supervisor && \
     wget -q https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
     unzip Xray-linux-64.zip && \
     mv xray $APP_HOME/xray && \
