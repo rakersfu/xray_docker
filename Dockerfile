@@ -24,6 +24,7 @@ RUN addgroup -g 1000 -S appgroup && \
 
 # ③ 复制入口脚本
 COPY *.sh $APP_BIN/
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x $APP_BIN/*.sh && \
     chown -R appuser:appgroup $APP_HOME
 
@@ -35,4 +36,5 @@ EXPOSE 443 2779
 
 # ⑥ 入口 + 默认命令
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["./xray", "run", "-config", "config.json"]
+#CMD ["./xray", "run", "-config", "config.json"]
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
