@@ -16,6 +16,3 @@ services:
       DESTPORT: 443                  # 伪装网站的端口，跟DESTDOMAIN所用网址要对应
       SHORTIDS: b0006687             # 按自己需要更改，0~9，a~f组合，双数，最多16个字符
       LOG_LEVEL: warning             # 一般不用改
-
-    volumes:
-      - ./logs:/var/log/xray                          #你挂载的本地文件夹必须有写入权限
