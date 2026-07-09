@@ -27,7 +27,7 @@ COPY *.sh $APP_BIN/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x $APP_BIN/*.sh && \
     mkdir -p $APP_LOGS && \
-    mkdir -p /var/run && chown appuser:appuser /var/run && \
+    mkdir -p /var/run && chown -R appuser:appgroup /var/run && \
     chown -R appuser:appgroup $APP_HOME
 
 # ④ 设置用户
