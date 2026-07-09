@@ -23,8 +23,7 @@ RUN addgroup -g 1000 -S appgroup && \
     rm -rf /var/cache/apk/*
 
 # ③ 复制入口脚本
-#COPY entrypoint.sh $APP_BIN/entrypoint.sh
-COPY entrypoint_new.sh $APP_BIN/entrypoint.sh
+COPY entrypoint.sh $APP_BIN/entrypoint.sh
 RUN chmod +x $APP_BIN/entrypoint.sh && \
     chown -R appuser:appgroup $APP_HOME
 
