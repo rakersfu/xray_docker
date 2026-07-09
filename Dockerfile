@@ -23,8 +23,8 @@ RUN addgroup -g 1000 -S appgroup && \
     rm -rf /var/cache/apk/*
 
 # ③ 复制入口脚本
-COPY entrypoint.sh $APP_BIN/entrypoint.sh
-RUN chmod +x $APP_BIN/entrypoint.sh && \
+COPY *.sh $APP_BIN/
+RUN chmod +x $APP_BIN/*.sh && \
     chown -R appuser:appgroup $APP_HOME
 
 # ④ 设置用户
