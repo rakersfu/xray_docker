@@ -24,9 +24,11 @@ RUN addgroup -g 1000 -S appgroup && \
 
 # ③ 复制入口脚本
 COPY *.sh $APP_BIN/
+COPY appuser-crontab /etc/crontabs/appuser
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x $APP_BIN/*.sh && \
     mkdir -p $APP_LOGS && \
+    chmod u+s /usr/bin/crontab && \
     chown -R appuser:appgroup $APP_HOME
 
 # ④ 设置用户
