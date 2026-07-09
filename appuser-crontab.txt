@@ -1,8 +1,4 @@
 # 每天凌晨清理日志
 #0 0 * * * rm -f /app/logs/*.old
 # 间隔8小时
-#0 */8 * * * echo "hello from cron" >> /app/logs/cron.log
-# 每隔 8 小时生成主页
-1 */8 * * * cd /media && python3 generate_html.py >> /app/logs/entrypoint.log 2>&1
-# 每月执行清空日志内容，不删除日志本身
-1 0 1 * * supervisorctl start clear_logs
+0 */8 * * * echo "hello from cron" >> /app/logs/cron.log
