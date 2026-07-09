@@ -25,7 +25,7 @@ RUN addgroup -g 1000 -S appgroup && \
 # ③ 复制入口脚本
 COPY *.sh $APP_BIN/
 COPY appuser-crontab /etc/crontabs/appuser
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 RUN chmod +x $APP_BIN/*.sh && \
     mkdir -p $APP_LOGS && \
     chmod u+s /usr/bin/crontab && \
@@ -40,4 +40,4 @@ EXPOSE 443 2779
 # ⑥ 入口 + 默认命令
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 #CMD ["./xray", "run", "-config", "config.json"]
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
